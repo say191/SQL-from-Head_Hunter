@@ -1,0 +1,17 @@
+CREATE TABLE companies
+(
+	id_company integer UNIQUE NOT NULL,
+	name_company varchar PRIMARY KEY,
+	url varchar,
+	trusted_status boolean NOT NULL
+);
+
+CREATE TABLE vacancies
+(
+	id_vacancy integer PRIMARY KEY,
+	name_vacancy varchar NOT NULL,
+	name_company varchar REFERENCES companies(name_company),
+	salary integer,
+	currency varchar NOT NULL,
+	url varchar
+)
