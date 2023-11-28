@@ -27,14 +27,18 @@ with psycopg2.connect(
         password='sayMe123') as conn:
     with conn.cursor() as cur:
         for vacancy in data['items']:  # Проходимся по каждой из вакансий
-            if vacancy['employer']['id'] not in employers:
-                # Если в списке уже есть такой работодатель, то мы его пропускаем
-                # т к нам нужны уникальный значения (id работодателя) без повторения
-                employers.append(vacancy['employer']['id'])  # Добавляем в список id работодателя или компании
-                cur.execute('INSERT INTO companies VALUES (%s, %s, %s, %s)',
-                            (vacancy['employer']['id'], vacancy['employer']['name'],
-                             vacancy['employer']['alternate_url'], vacancy['employer']['trusted']))
-                # Заполняем таблицу companies в БД
+            if vacancy['type']['id'] == 'anonymous':
+                continue
+                # Пропускаем вакансии с анонимными работодателями
+            else:
+                if vacancy['employer']['id'] not in employers:
+                    # Если в списке уже есть такой работодатель, то мы его пропускаем
+                    # т к нам нужны уникальный значения (id работодателя) без повторения
+                    employers.append(vacancy['employer']['id'])  # Добавляем в список id работодателя или компании
+                    cur.execute('INSERT INTO companies VALUES (%s, %s, %s, %s)',
+                                (vacancy['employer']['id'], vacancy['employer']['name'],
+                                 vacancy['employer']['alternate_url'], vacancy['employer']['trusted']))
+                    # Заполняем таблицу companies в БД
 
             salary = 0
             # Т к на Head Hunter формат з/п имеет атрибут "от" и "до",

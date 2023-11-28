@@ -14,6 +14,9 @@ class DBManager:  # Создаем класс для работы с БД
 
     @staticmethod
     def get_companies_and_vacancies_count():
+        """
+            Получает список всех компаний и количество вакансий у каждой компании.
+        """
         DBManager.cur.execute('SELECT name_company, COUNT(id_vacancy)'
                               'FROM vacancies GROUP BY name_company')
         result = DBManager.cur.fetchall()
@@ -22,12 +25,12 @@ class DBManager:  # Создаем класс для работы с БД
         DBManager.cur.close()
         DBManager.conn.close()
 
-        """
-        Получает список всех компаний и количество вакансий у каждой компании.
-        """
-
     @staticmethod
     def get_all_vacancies():
+        """
+            Получает список всех вакансий с указанием названия компании,
+            названия вакансии и зарплаты и ссылки на вакансию.
+        """
         DBManager.cur.execute('SELECT *'
                               'FROM vacancies')
         result = DBManager.cur.fetchall()
@@ -36,13 +39,11 @@ class DBManager:  # Создаем класс для работы с БД
         DBManager.cur.close()
         DBManager.conn.close()
 
-        """
-        Получает список всех вакансий с указанием названия компании,
-        названия вакансии и зарплаты и ссылки на вакансию.
-        """
-
     @staticmethod
     def get_avg_salary():
+        """
+            Получает среднюю зарплату по вакансиям.
+        """
         DBManager.cur.execute("SELECT CAST (AVG(salary) AS integer)"
                               "FROM vacancies WHERE currency = 'RUR'")
         result = DBManager.cur.fetchall()
@@ -50,12 +51,11 @@ class DBManager:  # Создаем класс для работы с БД
         DBManager.cur.close()
         DBManager.conn.close()
 
-        """
-        Получает среднюю зарплату по вакансиям.
-        """
-
     @staticmethod
     def get_vacancies_with_higher_salary():
+        """
+            Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.
+        """
         DBManager.cur.execute("SELECT * "
                               "FROM vacancies "
                               "WHERE currency = 'RUR' "
@@ -66,12 +66,12 @@ class DBManager:  # Создаем класс для работы с БД
         DBManager.cur.close()
         DBManager.conn.close()
 
-        """
-        Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.
-        """
-
     @staticmethod
     def get_vacancies_with_keyword():
+        """
+            Получает список всех вакансий, в названии которых содержатся
+            переданные в метод слова, например python.
+        """
         key_word = input('Enter a key word for searching inside BD:\n')
         DBManager.cur.execute("select * "
                               "from vacancies "
@@ -83,8 +83,3 @@ class DBManager:  # Создаем класс для работы с БД
             print('There are not vacancies with this key word.')
         DBManager.cur.close()
         DBManager.conn.close()
-
-        """
-        Получает список всех вакансий, в названии которых содержатся
-        переданные в метод слова, например python.
-        """
